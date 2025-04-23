@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>박형은 테스트 ver1</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f3f3f3;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .question h2 {
+      font-size: 18px;
+    }
+    .options button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #3498db;
+      color: white;
+    }
+    .options button:hover {
+      background: #2980b9;
+    }
+    .result {
+      display: none;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-top: 30px;
+    }
+    .result strong {
+      font-size: 20px;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>👊 박형은 테스트 ver1 👊</h1>
+    <p style="text-align: center;">당신의 이상형 스타일과 현실적인 결혼 기준을 알아보세요!</p>
+  </div>
+
+  <!-- 이상형 스타일 테스트 -->
+  <div class="container" id="styleTestContainer">
+    <h2>이상형 스타일 테스트 (10문항)</h2>
+    <div id="styleQuiz"></div>
+    <div class="result" id="styleResult"></div>
+  </div>
+
+  <hr/>
+
+  <!-- 현실 이상형 테스트 -->
+  <div class="container" id="realTestContainer">
+    <h2>현실 이상형 테스트 (결혼 기준, 10문항)</h2>
+    <div id="realQuiz"></div>
+    <div class="result" id="realResult"></div>
+  </div>
+
+  <script>
+    // 이상형 스타일 테스트
+    const styleQuestions = [
+      { q: "이상형의 스타일은?", a: "귀엽고 상냥한", b: "차갑고 도도한" },
+      { q: "좋아하는 데이트는?", a: "카페에서 대화", b: "활동적인 데이트" },
+      { q: "상대방의 말투는?", a: "다정하고 부드러운", b: "직설적이고 시크한" },
+      { q: "패션 스타일은?", a: "편안하고 캐주얼한", b: "세련되고 트렌디한" },
+      { q: "취미는?", a: "잔잔한 취미 (독서, 영화 등)", b: "활동적인 취미 (여행, 운동 등)" },
+      { q: "감정 표현 방식은?", a: "자주 말로 표현해주는 스타일", b: "말보단 행동으로 보여주는 스타일" },
+      { q: "관계 주도권은?", a: "내가 리드하는 걸 선호", b: "상대가 리드해주는 게 좋음" },
+      { q: "연락 스타일은?", a: "자주 연락하고 대화가 많은 편", b: "필요할 때만 깔끔하게 연락" },
+      { q: "사소한 질투는?", a: "나를 좋아하니 질투도 당연", b: "믿으면 질투는 필요 없어" },
+      { q: "기념일 챙기기?", a: "하나하나 챙기는 게 중요함", b: "너무 형식적인 건 부담스러움" }
+    ];
+    let styleCurrent = 0, styleA = 0, styleB = 0;
+
+    function renderStyleQuestion() {
+      const q = styleQuestions[styleCurrent];
+      document.getElementById('styleQuiz').innerHTML = `
+        <div class="question">
+          <h2>${styleCurrent + 1}. ${q.q}</h2>
+          <div class="options">
+            <button onclick="answerStyle('A')">${q.a}</button>
+            <button onclick="answerStyle('B')">${q.b}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function answerStyle(choice) {
+      if (choice === 'A') styleA++; else styleB++;
+      styleCurrent++;
+      if (styleCurrent < styleQuestions.length) {
+        renderStyleQuestion();
+      } else {
+        document.getElementById('styleQuiz').style.display = 'none';
+        const resultText = styleA > styleB
+          ? "<strong>부드럽고 따뜻한 스타일</strong><br>당신은 마음이 따뜻하고 공감능력이 뛰어난 사람을 이상형으로 생각합니다. 연애에 있어 소통을 중요하게 여기고, 감정 표현이 자연스러운 상대에게 끌리는 경향이 있습니다. 배려 깊고 다정한 분위기의 사람과 함께할 때 안정감을 느끼며, 조용한 데이트나 서로의 이야기를 깊게 나누는 순간을 소중히 여깁니다."
+          : "<strong>도도하고 시크한 스타일</strong><br>당신은 자신만의 매력을 가진, 독립적이고 자기주도적인 사람에게 끌립니다. 감정에 휘둘리기보단 이성적이고 단단한 사람을 이상형으로 삼는 경향이 있으며, 적당한 거리감 속에서 서서히 친해지는 관계를 선호합니다. 트렌디하고 자신감 있는 태도에 매력을 느끼며, 관계 속에서도 서로의 자유를 존중하는 스타일입니다.";
+        document.getElementById('styleResult').innerHTML = resultText;
+        document.getElementById('styleResult').style.display = 'block';
+      }
+    }
+    renderStyleQuestion();
+
+    // 현실 이상형 테스트
+    const realQuestions = [
+      { q: "내 인생에서 가장 중요한 것은?", a: "가정과 아이 중심의 삶", b: "커리어와 자기계발 중심의 삶" },
+      { q: "결혼 후 부부의 경제는?", a: "소득을 합쳐 공동으로 관리", b: "각자 자율적으로 관리" },
+      { q: "배우자의 청소습관이 맞지 않을 때?", a: "솔직히 말하고 맞춰간다", b: "크게 문제 안되면 넘어간다" },
+      { q: "아이에 대한 생각은?", a: "꼭 낳고 싶다", b: "꼭 낳고 싶진 않다" },
+      { q: "부부싸움이 있을 때 나는?", a: "바로 풀고 싶다", b: "시간 두고 정리한 후 대화" },
+      { q: "배우자 부모님과의 관계는?", a: "자주 왕래하고 친밀", b: "거리두며 예의만 지킨다" },
+      { q: "이상적인 주말은?", a: "집에서 함께 요리, 영화", b: "야외 활동, 여행" },
+      { q: "다른 정치/종교 성향?", a: "가치관 맞으면 OK", b: "기본적으로 맞아야 함" },
+      { q: "이상형 나이대는?", a: "연상", b: "연하" },
+      { q: "가장 중요한 건?", a: "돈 (경제력)", b: "사랑 (감정)" }
+    ];
+    let realCurrent = 0, realA = 0, realB = 0;
+
+    function renderRealQuestion() {
+      const q = realQuestions[realCurrent];
+      document.getElementById('realQuiz').innerHTML = `
+        <div class="question">
+          <h2>${realCurrent + 1}. ${q.q}</h2>
+          <div class="options">
+            <button onclick="answerReal('A')">${q.a}</button>
+            <button onclick="answerReal('B')">${q.b}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function answerReal(choice) {
+      if (choice === 'A') realA++; else realB++;
+      realCurrent++;
+      if (realCurrent < realQuestions.length) {
+        renderRealQuestion();
+      } else {
+        document.getElementById('realQuiz').style.display = 'none';
+        const result = realA >= 7
+          ? "<strong>가정 중심 안정형</strong><br>당신은 결혼 후의 생활을 매우 중요하게 생각하며, 가정과 아이를 중심으로 조화롭고 따뜻한 삶을 꿈꿉니다. 경제적 안정, 서로에 대한 배려, 부모님과의 원만한 관계까지 포함된 '현실적 이상형'을 중시하는 스타일입니다."
+          : realB >= 7
+          ? "<strong>개인 자율 모던형</strong><br>당신은 결혼이 하나의 제도보다는 파트너십이라 생각하며, 개인의 자유와 자기실현을 중시합니다. 이상형은 지적이고 진취적인 사고를 가진 사람이며, 감정보다 가치관과 방향성의 일치를 중요하게 여깁니다."
+          : "<strong>유연한 타협형</strong><br>당신은 어느 한쪽에 치우치기보단 상황과 상대에 따라 융통성 있게 조율해가는 스타일입니다. 가정과 개인 모두를 균형 있게 존중하며, 따뜻하면서도 대화가 잘 통하는 파트너를 이상형으로 생각합니다.";
+        document.getElementById('realResult').innerHTML = result;
+        document.getElementById('realResult').style.display = 'block';
+      }
+    }
+    renderRealQuestion();
+  </script>
+
+</body>
+</html>
